@@ -1,6 +1,6 @@
 # Sahur Timer / 1.1 / 11.09.2026
 
- 
+
 import time
 import datetime
 import os
@@ -12,19 +12,47 @@ os.system('mode con: cols=60 lines=17')
 
 rem_time = ['00:00:00', '00']
 
+data = { 'date' : "00.00.0000", 
+         'time' : "00:00:00",
+         'mode' : 1 }
 
 def menu ():
+  try: 
     os.system('cls')
-    print(' [1] - Смотреть остаток \n [2] - Изменить дату \n [3] - Выйти')
+    print(' [1] - Смотреть остаток \n [2] - Изменить дату \n [3] - Формат вывода \n [ ] - Выйти')
     de = input(" > ")
     return de        
+  except KeyboardInterrupt: exit()
 
-def write ():
-  try:
-    with open('time.json', 'r') as file:
-      time_z = file.read()
+def output_mode ():
+  print(" [1] - Стандартный \n [2] - Бегущие строки \n [3] - Большой Аски")
+  de = input(">> ")
+  if de == '1': data['mode'] = 1
+  if de == '2': data['mode'] = 2
+  if de == '3': data['mode'] = 3
+  print("ага, записано"); time.sleep(1)
+  update_data = write()
+
+def read():
+  global data
+  try: 
+      with open('time.json', 'r') as file:
+        new_data = json.load(file)
+        data.clear(); data.update(new_data)
   except FileNotFoundError: 
-    print("Ошибка: файл time.json не найден"); time.sleep(1); print('создан в локальной папке')
+      print("Ошибка: файл time.json не найден"); time.sleep(1); print('создан в локальной папке')
+      create_data_file = write()
+
+def write():
+  with open('time.json', 'w') as file:
+      json.dump(data, file, ensure_ascii=False, indent=4)
+      print("данные сохранены!")
+  print(data); time.sleep(1)
+  
+  
+def write_time ():
+  global data
+  check_update_data = read()
   while True:
     #os.system('cls')
     new_date = input("Новая дата (ДД-ММ-ГГГГ): ")
@@ -39,12 +67,9 @@ def write ():
       if len(new_time) == 8:
         new_date = new_date.replace("-",".")
         new_time = new_time.replace("-",":")
-        data = { 'date' : new_date, 
-                 'time' : new_time  }
-        with open('time.json', 'w') as file:
-          json.dump(data, file, ensure_ascii=False, indent=4)
-        print("данные сохранены!")
-        print(data); time.sleep(1)
+        data['date'] = new_date
+        data['time'] = new_time
+        update_data = write()
         break
       else: 
         print('неправильное количество символов!'); time.sleep(1)
@@ -53,16 +78,12 @@ def write ():
     continue
 
 def check ():
-  try:
-    with open('time.json', 'r') as file:
-      time_z = json.load(file)
-  except FileNotFoundError: print("Ошибка: файл time.json не найден")
-  else:
-    print(time_z)
-    time_x = time_z['date'].split('.')
-    time_n = time_z['time'].split(':')
-    print('date:',time_x)
-    print('time:',time_n)
+    update_data = read()
+    print(data)
+    time_x = data['date'].split('.')
+    time_n = data['time'].split(':')
+    print('date:', time_x)
+    print('time:', time_n)
 
     end_time = {'year':None, 'month':None, 'day':None, 'hour':None, 'minutes':None, 'seconds':None}
 
@@ -85,10 +106,10 @@ def check ():
 
 
     test = '01.08.2026 09:09:09'
-    time_data = time_z['date']+' '+time_z['time']
+    time_data = data['date']+' '+data['time']
     print(time_data)
     time.sleep(1)
-
+    os.system('cls')
     c = 0
     while True:
       c += 1
@@ -121,8 +142,8 @@ def check ():
         rem_time[0] = f"{hours}:{minutes}:{seconds}"
         rem_time[1] = days
 
-        color = Fore.GREEN
-        if int(rem_time[1]) < 10 and int(rem_time[1]) > 3: color = Fore.YELLOW 
+        if int(rem_time[1]) > 10: color = Fore.GREEN
+        if int(rem_time[1]) < 10: color = Fore.YELLOW 
         if int(rem_time[1]) < 3: color = Fore.RED 
 
         times, days = rem_time
@@ -130,34 +151,124 @@ def check ():
         if len(l) < 2: 
           l = '──'
           days = '0'+str(rem_time[1])
+
+        def output_mode_1(color, days, times):
+          line1 = f"╭─{l}─╮╭──────────╮"
+          line2 = f"│ {color}{days}{Style.RESET_ALL} ││ {color}{times}{Style.RESET_ALL} │"
+          line3 = f"╰─{l}─╯╰──────────╯"
+          print(line1)
+          print(line2)
+          print(line3, end="", flush=True)
+          print("\r\033[2F", end="", flush=True)
+
+
+        def output_mode_2(color, days, times):
+          a1 = f"\r╭─{l}─╮╭──────────╮ \n│ {color}{days}{Style.RESET_ALL} ││ {color}{times}{Style.RESET_ALL} │\n╰─{l}─╯╰──────────╯"
         
-        a1 = f"\r╭─{l}─╮╭──────────╮ \n│ {color}{days}{Style.RESET_ALL} ││ {color}{times}{Style.RESET_ALL} │\n╰─{l}─╯╰──────────╯"
+          if rem_time[0] == '00:00:00' and rem_time[1] == 0:
+            print(a1, end="", flush=True); time.sleep(3)
+            color = Fore.WHITE
+            print(a1, end="", flush=True); time.sleep(1)
+            print(Fore.WHITE,"\n  time is up",Style.RESET_ALL); time.sleep(5)
+            input("< ")
+            return 0
+
+          print(a1, end="\r", flush=True)
+
+        def output_mode_3(color, days, times):
+          digits_2 = [
+          [ "  ___",
+            " /  /",
+            "/__/ " ],
+          [ "  _ ",
+            "  / ",
+            "_/_ " ],
+          [ "  __",
+            " __/",
+            "/__ " ],
+          [ "  __",
+            " __/",
+            "__/ " ],
+          [ " _  ",
+            "/__/",
+            "  / " ],
+          [ " __ ",
+            "/__ ",
+            "__/ " ],
+          [ "  __",
+            " /_ ",
+            "/__/" ],
+          [ " ___",
+            "  _/",
+            "  / " ],
+          [ "  ___",
+            " /__/",
+            "/__/ " ],
+          [ " ___",
+            "/__/",
+            "__/ " ],
       
-        if rem_time[0] == '00:00:00' and rem_time[1] == 0:
-          print(a1, end="", flush=True); time.sleep(3)
-          color = Fore.WHITE
-          print(a1, end="", flush=True); time.sleep(1)
-          print(Fore.WHITE,"\n  time is up",Style.RESET_ALL); time.sleep(5)
-          input("< ")
-          break  
+          [ "   ",
+            " - ",
+            "-  " ]
+        ]
 
-        print(a1, end="\r", flush=True)
+          split_time_now = ['0','1',  '3','4',  '2','7']
 
+          final_output = [0,0,0,0,0,0,0,0]
+
+          digits = digits_2
+
+          def calculation():
+            time_now = str(datetime.datetime.now())[11:-7]
+            b = time_now.split(':')
+            #split_time_now[5] = list(b[2])[0]
+            #split_time_now[5] = list(b[2])[1]
+            split_time_now[0] = list(b[0])[0]
+            split_time_now[1] = list(b[0])[1]
+            split_time_now[2] = list(b[1])[0]
+            split_time_now[3] = list(b[1])[1]
+            split_time_now[4] = list(b[2])[0]
+            split_time_now[5] = list(b[2])[1]
+  
+          get_calculation = calculation()
+          for calc_digit in range(6):
+            final_output[calc_digit] = digits[int(split_time_now[calc_digit])]
+            
+          LINE_1 = f"{color}{final_output[0][0]}{final_output[1][0]}{digits[10][0]}{final_output[2][0]}{final_output[3][0]}{digits[10][0]}{final_output[4][0]}{final_output[5][0]}\033[K"
+          LINE_2 = f"{final_output[0][1]}{final_output[1][1]}{digits[10][1]}{final_output[2][1]}{final_output[3][1]}{digits[10][1]}{final_output[4][1]}{final_output[5][1]}\033[K"
+          LINE_3 = f"{final_output[0][2]}{final_output[1][2]}{digits[10][2]}{final_output[2][2]}{final_output[3][2]}{digits[10][2]}{final_output[4][2]}{final_output[5][2]}\033[K"
+          print(LINE_1)
+          print(LINE_2)
+          print(LINE_3, end="", flush=True)
+          print("\r\033[3F", end="", flush=True)
+
+        if data['mode'] == 1: 
+            output = output_mode_1(color, days, times)
+        if data['mode'] == 2: 
+            output = output_mode_2(color, days, times)
+        if data['mode'] == 3: 
+            output = output_mode_3(color, days, times)
         time.sleep(1)
-      except KeyboardInterrupt: return True
+      except KeyboardInterrupt: 
+        print(Fore.RESET)
+        return True
 
 
 
 if __name__ == '__main__':
   while True: # общий алгоритм
+    check_data = read()
     a = menu()
     if a == '1':
       a = check()
       if a == True:
         continue
     elif a == '2':
-      a = write()
-    elif a == '3' or a == ' ':
+      a = write_time()
+    elif a == '3':
+      a = output_mode()
+    elif a == 'exit' or a == ' ':
       print("Выход"), time.sleep(0.5)
       break
     
