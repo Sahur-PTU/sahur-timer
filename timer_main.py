@@ -1,11 +1,13 @@
 # Sahur Timer / 1.1 / 11.09.2026
 
-
 import time
 import datetime
 import os
 import json
 from colorama import init, Fore, Back, Style
+
+import time_calculator
+import time_bigASCII
 
 init()
 os.system('mode con: cols=60 lines=17')
@@ -36,7 +38,7 @@ def output_mode ():
 def read():
   global data
   try: 
-      with open('time.json', 'r') as file:
+      with open('data/time.json', 'r') as file:
         new_data = json.load(file)
         data.clear(); data.update(new_data)
   except FileNotFoundError: 
@@ -44,7 +46,7 @@ def read():
       create_data_file = write()
 
 def write():
-  with open('time.json', 'w') as file:
+  with open('data/time.json', 'w') as file:
       json.dump(data, file, ensure_ascii=False, indent=4)
       print("данные сохранены!")
   print(data); time.sleep(1)

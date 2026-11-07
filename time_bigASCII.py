@@ -1,9 +1,5 @@
 import time
-# from счётчик import rem_time
-#import счётчик
-
-#rem_time = счётчик.rem_time
-#print(rem_time)
+import datetime
 
 """
   __  
@@ -38,12 +34,81 @@ ___
 __/
 """
 s = ['0','0',':','0','0',':','0','0']
+"""
+  __ 
+ |  |
+ |__|
+   _  
+  /| 
+  _|_
+  __  
+  __| 
+ |__  
+  __  
+  __| 
+  __|  
+  _  _ 
+  |__| 
+     |  
+   __  
+  |__  
+   __| 
+   __ 
+  |__  
+  |__| 
+  __
+    |
+    |
+   __  
+  |__| 
+  |__| 
+   __
+  |__|
+   __|
+"""
+
+digits_1 = [
+    [ " __ ",
+      "|  |",
+      "|__|" ],
+    [ " _ ",
+      "/| ",
+      "_|_" ],
+    [ " __ ",
+      " __|",
+      "|__ " ],
+    [ "__ ",
+      "__|",
+      "__|" ],
+    [ "_   ",
+      "|__|",
+      "   |" ],
+    [ " __ ",
+      "|__ ",
+      " __|" ],
+    [ " __ ",
+      "|__ ",
+      "|__|" ],
+    [ " __ ",
+      "   |",
+      "   |" ],
+    [ " __ ",
+      "|__|",
+      "|__|" ],
+    [ " __ ",
+      "|__|",
+      " __|" ],
+      
+    [ "   ",
+      " - ",
+      " - " ]
+  ]
 
 
-digits = [
-    [ "  __",
-      " / /",
-      "/_/ " ],
+digits_2 = [
+    [ "  ___",
+      " /  /",
+      "/__/ " ],
     [ "  _ ",
       "  / ",
       "_/_ " ],
@@ -56,61 +121,52 @@ digits = [
     [ " _  ",
       "/__/",
       "  / " ],
-    [ " __",
-      "/__",
-      "__/" ],
+    [ " __ ",
+      "/__ ",
+      "__/ " ],
     [ "  __",
       " /_ ",
       "/__/" ],
     [ " ___",
-      "   /",
+      "  _/",
       "  / " ],
-    [ "  __",
-      " /_/",
-      "/_/ " ],
+    [ "  ___",
+      " /__/",
+      "/__/ " ],
     [ " ___",
       "/__/",
       "__/ " ],
       
-    [ "  ",
-      " -",
-      "- " ]
+    [ "   ",
+      " - ",
+      "-  " ]
   ]
 
-import os 
-os.system('cls')
-import random
-
-a = random.randint(0,9)
-b = random.randint(0,9)
-c = random.randint(0,9)
-
-s = ['0','1',  '3','4',  '2','7']
+split_time_now = ['0','1',  '3','4',  '2','7']
 
 final_output = [0,0,0,0,0,0,0,0,0,0]
 
-import datetime 
-
+digits = digits_2
 
 def calculation():
-  a = str(datetime.datetime.now())[11:-7]
-  b = a.split(':')
+  time_now = str(datetime.datetime.now())[11:-7]
+  b = time_now.split(':')
 
-  s[0] = list(b[0])[0]
-  s[1] = list(b[0])[1]
-  s[2] = list(b[1])[0]
-  s[3] = list(b[1])[1]
-  s[4] = list(b[2])[0]
-  s[5] = list(b[2])[1]
+  split_time_now[0] = list(b[0])[0]
+  split_time_now[1] = list(b[0])[1]
+  split_time_now[2] = list(b[1])[0]
+  split_time_now[3] = list(b[1])[1]
+  split_time_now[4] = list(b[2])[0]
+  split_time_now[5] = list(b[2])[1]
 
 while True:
   try:
     get_calculation = calculation()
     for calc_digit in range(6):
-      final_output[calc_digit] = digits[int(s[calc_digit])]
-    LINE_1 = f"{final_output[0][0]} {final_output[1][0]}{digits[10][0]} {final_output[2][0]} {final_output[3][0]}{digits[10][0]} {final_output[4][0]} {final_output[5][0]}\033[K"
-    LINE_2 = f"{final_output[0][1]} {final_output[1][1]}{digits[10][1]} {final_output[2][1]} {final_output[3][1]}{digits[10][1]} {final_output[4][1]} {final_output[5][1]}\033[K"
-    LINE_3 = f"{final_output[0][2]} {final_output[1][2]}{digits[10][2]} {final_output[2][2]} {final_output[3][2]}{digits[10][2]} {final_output[4][2]} {final_output[5][2]}\033[K"
+      final_output[calc_digit] = digits[int(split_time_now[calc_digit])]
+    LINE_1 = f"{final_output[0][0]}{final_output[1][0]}{digits[10][0]}{final_output[2][0]}{final_output[3][0]}{digits[10][0]}{final_output[4][0]}{final_output[5][0]}\033[K"
+    LINE_2 = f"{final_output[0][1]}{final_output[1][1]}{digits[10][1]}{final_output[2][1]}{final_output[3][1]}{digits[10][1]}{final_output[4][1]}{final_output[5][1]}\033[K"
+    LINE_3 = f"{final_output[0][2]}{final_output[1][2]}{digits[10][2]}{final_output[2][2]}{final_output[3][2]}{digits[10][2]}{final_output[4][2]}{final_output[5][2]}\033[K"
     print(LINE_1)
     print(LINE_2)
     print(LINE_3, end="", flush=True)
