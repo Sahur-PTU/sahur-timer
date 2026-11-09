@@ -10,7 +10,7 @@ import time_calculator
 import time_bigASCII
 
 init()
-os.system('mode con: cols=60 lines=17')
+#os.system('mode con: cols=60 lines=17')
 
 rem_time = ['00:00:00', '00']
 
@@ -18,7 +18,7 @@ data = { 'date' : "00.00.0000",
          'time' : "00:00:00",
          'mode' : 1 }
 
-def menu ():
+def menu():
   try: 
     os.system('cls')
     print(' [1] - Смотреть остаток \n [2] - Изменить дату \n [3] - Формат вывода \n [ ] - Выйти')
@@ -26,7 +26,7 @@ def menu ():
     return de        
   except KeyboardInterrupt: exit()
 
-def output_mode ():
+def output_mode():
   print(" [1] - Стандартный \n [2] - Бегущие строки \n [3] - Большой Аски")
   de = input(">> ")
   if de == '1': data['mode'] = 1
@@ -79,7 +79,7 @@ def write_time ():
     else: print('неправильное количество символов!'); time.sleep(1)
     continue
 
-def check ():
+def check():
     update_data = read()
     print(data)
     time_x = data['date'].split('.')
@@ -178,72 +178,8 @@ def check ():
           print(a1, end="\r", flush=True)
 
         def output_mode_3(color, days, times):
-          digits_2 = [
-          [ "  ___",
-            " /  /",
-            "/__/ " ],
-          [ "  _ ",
-            "  / ",
-            "_/_ " ],
-          [ "  __",
-            " __/",
-            "/__ " ],
-          [ "  __",
-            " __/",
-            "__/ " ],
-          [ " _  ",
-            "/__/",
-            "  / " ],
-          [ " __ ",
-            "/__ ",
-            "__/ " ],
-          [ "  __",
-            " /_ ",
-            "/__/" ],
-          [ " ___",
-            "  _/",
-            "  / " ],
-          [ "  ___",
-            " /__/",
-            "/__/ " ],
-          [ " ___",
-            "/__/",
-            "__/ " ],
-      
-          [ "   ",
-            " - ",
-            "-  " ]
-        ]
-
-          split_time_now = ['0','1',  '3','4',  '2','7']
-
-          final_output = [0,0,0,0,0,0,0,0]
-
-          digits = digits_2
-
-          def calculation():
-            time_now = str(datetime.datetime.now())[11:-7]
-            b = time_now.split(':')
-            #split_time_now[5] = list(b[2])[0]
-            #split_time_now[5] = list(b[2])[1]
-            split_time_now[0] = list(b[0])[0]
-            split_time_now[1] = list(b[0])[1]
-            split_time_now[2] = list(b[1])[0]
-            split_time_now[3] = list(b[1])[1]
-            split_time_now[4] = list(b[2])[0]
-            split_time_now[5] = list(b[2])[1]
-  
-          get_calculation = calculation()
-          for calc_digit in range(6):
-            final_output[calc_digit] = digits[int(split_time_now[calc_digit])]
-            
-          LINE_1 = f"{color}{final_output[0][0]}{final_output[1][0]}{digits[10][0]}{final_output[2][0]}{final_output[3][0]}{digits[10][0]}{final_output[4][0]}{final_output[5][0]}\033[K"
-          LINE_2 = f"{final_output[0][1]}{final_output[1][1]}{digits[10][1]}{final_output[2][1]}{final_output[3][1]}{digits[10][1]}{final_output[4][1]}{final_output[5][1]}\033[K"
-          LINE_3 = f"{final_output[0][2]}{final_output[1][2]}{digits[10][2]}{final_output[2][2]}{final_output[3][2]}{digits[10][2]}{final_output[4][2]}{final_output[5][2]}\033[K"
-          print(LINE_1)
-          print(LINE_2)
-          print(LINE_3, end="", flush=True)
-          print("\r\033[3F", end="", flush=True)
+          
+          pass
 
         if data['mode'] == 1: 
             output = output_mode_1(color, days, times)

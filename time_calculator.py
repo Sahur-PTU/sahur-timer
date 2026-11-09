@@ -51,7 +51,7 @@ def calculation(time_end, format_number) :
     for year in range(int(remain_list[0])):
       remain_list[2] += check_days_in_month_and_year(int(time_now_list[0])+ year + 1, int(time_now_list[1]))[0]
 
-    return remain_list[0],remain_list[1],remain_list[2],remain_list[3],remain_list[4],remain_list[5]
+    return True
 
   if format_number == 1: with_only_days()
 
@@ -64,11 +64,16 @@ def calculation(time_end, format_number) :
 
   if remain_list[0] < 10:   years = f"0{remain_list[0]}" # нули прибавляем чтобы красива была 
   if remain_list[1] < 10:  months = f"0{remain_list[1]}"
-  if remain_list[2] < 10:    days = f"0{remain_list[2]}"
+  if remain_list[2] < 10:    days = f"00{remain_list[2]}"
   if remain_list[3] < 10:   hours = f"0{remain_list[3]}"
   if remain_list[4] < 10: minutes = f"0{remain_list[4]}"
   if remain_list[5] < 10: seconds = f"0{remain_list[5]}"
+  if format_number == 1: 
+    if len(days) <= 1: days = f"00{days}"
+    if len(days) <= 2: days = f"00{days}"
+    if len(days) >= 3: days = f"{days}"
+    if len(days) >= 4: days = f"{days[1:]}"
 
   return years, months, days, hours, minutes, seconds
 
-print(calculation("2029-11-08 10:00:00", 1))
+#print(calculation("2029-11-08 10:00:00", 0))

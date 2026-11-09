@@ -139,52 +139,61 @@ digits_2 = [
       
     [ "   ",
       " - ",
-      "-  " ]
+      "-  " ],
+
+    [ "   ",
+      "   ",
+      " _ " ]
   ]
 
-split_time_now = ['0','1',  '3','4',  '2','7']
+split_time = ['0','0','1',  '3','4',  '2','7', '1','8']
 
-final_output = [0,0,0,0,0,0,0,0,0,0]
+f_output = [0,0,0,0,0,0,0,0,0,0]
 
 digits = digits_2
 
-def calculation():
-  time_now = str(datetime.datetime.now())[11:-7]
-  b = time_now.split(':')
+def calculation(vew_time): # присваивания под-списков к цифрам
 
-  split_time_now[0] = list(b[0])[0]
-  split_time_now[1] = list(b[0])[1]
-  split_time_now[2] = list(b[1])[0]
-  split_time_now[3] = list(b[1])[1]
-  split_time_now[4] = list(b[2])[0]
-  split_time_now[5] = list(b[2])[1]
+  split_time[0] = vew_time[0][0]
+  split_time[1] = vew_time[0][1]
+  split_time[2] = vew_time[0][2]
 
-while True:
-  try:
-    get_calculation = calculation()
-    for calc_digit in range(6):
-      final_output[calc_digit] = digits[int(split_time_now[calc_digit])]
-    LINE_1 = f"{final_output[0][0]}{final_output[1][0]}{digits[10][0]}{final_output[2][0]}{final_output[3][0]}{digits[10][0]}{final_output[4][0]}{final_output[5][0]}\033[K"
-    LINE_2 = f"{final_output[0][1]}{final_output[1][1]}{digits[10][1]}{final_output[2][1]}{final_output[3][1]}{digits[10][1]}{final_output[4][1]}{final_output[5][1]}\033[K"
-    LINE_3 = f"{final_output[0][2]}{final_output[1][2]}{digits[10][2]}{final_output[2][2]}{final_output[3][2]}{digits[10][2]}{final_output[4][2]}{final_output[5][2]}\033[K"
+  split_time[3] = vew_time[1][0]
+  split_time[4] = vew_time[1][1]
+
+  split_time[5] = vew_time[2][0]
+  split_time[6] = vew_time[2][1]
+
+  split_time[7] = vew_time[3][0]
+  split_time[8] = vew_time[3][1]
+
+
+def output(vew_time):
+    get_calculation = calculation(vew_time)
+
+    for calc_digit in range(9):
+        f_output[calc_digit] = digits[int(split_time[calc_digit])]
+
+    LINE_1 = f"{f_output[0][0]}{f_output[1][0]}{f_output[2][0]}   {f_output[3][0]}{f_output[4][0]}{digits[10][0]}{f_output[5][0]}{f_output[6][0]}{digits[10][0]}{f_output[7][0]}{f_output[8][0]}\033[K"
+    LINE_2 = f"{f_output[0][1]}{f_output[1][1]}{f_output[2][1]}   {f_output[3][1]}{f_output[4][1]}{digits[10][1]}{f_output[5][1]}{f_output[6][1]}{digits[10][1]}{f_output[7][1]}{f_output[8][1]}\033[K"
+    LINE_3 = f"{f_output[0][2]}{f_output[1][2]}{f_output[2][2]}   {f_output[3][2]}{f_output[4][2]}{digits[10][2]}{f_output[5][2]}{f_output[6][2]}{digits[10][2]}{f_output[7][2]}{f_output[8][2]}\033[K"
+    
     print(LINE_1)
     print(LINE_2)
     print(LINE_3, end="", flush=True)
     print("\r\033[2F", end="", flush=True)
     time.sleep(1)
-  except KeyboardInterrupt: break
- 
 
+import time_calculator
 
-exit()
-print(digits[a][0] + digits[c][0] + digits[b][0])
-print(digits[a][1] + digits[c][1] + digits[b][1])
-print(digits[a][2] + digits[c][2] + digits[b][2])
-
+while True:
+  result = time_calculator.calculation("2026-12-01 00:00:00", 1)
+  output(result[2:])
 
 
 
 '''
+('001','02','23','30')
 if rem_time[0][0] == '0':
     s[0] = ("""
   __  
