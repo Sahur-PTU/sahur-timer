@@ -187,7 +187,8 @@ def output(vew_time):
 import time_calculator
 
 while True:
-  result = time_calculator.calculation("2026-12-01 00:00:00", 1)
+  result = time_calculator.calculation("2027-12-01 00:00:00", 1)
+  if len(result[2]) < 3: result[2] = f"0{result[2]}"
   output(result[2:])
 
 
