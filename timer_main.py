@@ -178,8 +178,10 @@ def check():
           print(a1, end="\r", flush=True)
 
         def output_mode_3(color, days, times):
+          #print(color, " ")
+          #print([str(days), str(hours), str(minutes), str(seconds)])
+          time_bigASCII.main([str(days), str(hours), str(minutes), str(seconds)])
           
-          pass
 
         if data['mode'] == 1: 
             output = output_mode_1(color, days, times)
