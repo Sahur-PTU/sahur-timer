@@ -77,9 +77,9 @@ digits_1 = [
     [ " __ ",
       " __|",
       "|__ " ],
-    [ "__ ",
-      "__|",
-      "__|" ],
+    [ " __ ",
+      " __|",
+      " __|" ],
     [ "_   ",
       "|__|",
       "   |" ],
@@ -90,7 +90,7 @@ digits_1 = [
       "|__ ",
       "|__|" ],
     [ " __ ",
-      "   |",
+      "  _|",
       "   |" ],
     [ " __ ",
       "|__|",
@@ -106,7 +106,7 @@ digits_1 = [
 
 
 digits_2 = [
-    [ "  ___",
+    [ "  __ ",
       " /  /",
       "/__/ " ],
     [ "  _ ",
@@ -121,21 +121,21 @@ digits_2 = [
     [ " _  ",
       "/__/",
       "  / " ],
-    [ " __ ",
-      "/__ ",
-      "__/ " ],
+    [ "  __",
+      " /__",
+      " __/" ],
     [ "  __",
       " /_ ",
       "/__/" ],
     [ " ___",
       "  _/",
       "  / " ],
-    [ "  ___",
+    [ "  __ ",
       " /__/",
       "/__/ " ],
-    [ " ___",
-      "/__/",
-      "__/ " ],
+    [ "  ___",
+      " /__/",
+      " __/ " ],
       
     [ "   ",
       " - ",
@@ -182,14 +182,21 @@ def output(vew_time):
     print(LINE_2)
     print(LINE_3, end="", flush=True)
     print("\r\033[2F", end="", flush=True)
-    time.sleep(1)
 
 import time_calculator
 
-while True:
-  result = time_calculator.calculation("2027-12-01 00:00:00", 1)
-  if len(result[2]) < 3: result[2] = f"0{result[2]}"
-  output(result[2:])
+
+def main(input_time):
+    #result = time_calculator.calculation(input_time, 1)
+    if len(input_time[0]) < 3: input_time[0] = f"0{input_time[2]}"
+    #print(input_time)
+    output(input_time)
+
+
+if __name__ == "__main__":
+  while True:
+    main(['000', '00','00','00'])
+    time.sleep(1)
 
 
 
