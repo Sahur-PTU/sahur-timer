@@ -28,7 +28,7 @@ def calculation(time_end, format_number) :
   time_end_list = [time_end[0:4], time_end[5:7], time_end[8:10], time_end[11:13], time_end[14:16], time_end[17:19]] # разделение строки конечного времени на элементы
   remain_list = [int(time_end_list[0])-int(time_now_list[0]), int(time_end_list[1])-int(time_now_list[1]), int(time_end_list[2])-int(time_now_list[2]), int(time_end_list[3])-int(time_now_list[3]), int(time_end_list[4])-int(time_now_list[4]), int(time_end_list[5])-int(time_now_list[5])] # оставшееся количество времени 
   
-  if time_now_list >= time_end_list: return None # если время вышло
+  #if time_now_list >= time_end_list: return None # если время вышло
   #print(remain_list, '\n') # технический вывод
 
   # заём времени
@@ -55,19 +55,20 @@ def calculation(time_end, format_number) :
 
   if format_number == 1: with_only_days()
 
-  years =   str(remain_list[0]) # пока нужно
-  months =  str(remain_list[1])
-  days =    str(remain_list[2])
-  hours =   str(remain_list[3])
-  minutes = str(remain_list[4])
-  seconds = str(remain_list[5])
+  years =   remain_list[0] # пока нужно
+  months =  remain_list[1]
+  days =    remain_list[2]
+  hours =   remain_list[3]
+  minutes = remain_list[4]
+  seconds = remain_list[5]
 
+  '''
   if remain_list[0] < 10:   years = f"0{remain_list[0]}" # нули прибавляем чтобы красива была 
   if remain_list[1] < 10:  months = f"0{remain_list[1]}"
   if remain_list[2] < 10:    days = f"0{remain_list[2]}"
   if remain_list[3] < 10:   hours = f"0{remain_list[3]}"
-  if remain_list[4] < 10: minutes = f"0{remain_list[4]}"
-  if remain_list[5] < 10: seconds = f"0{remain_list[5]}"
+  if remain_list[4] < 10: minutes = f"0{remain_list[4]}"  решил пока возвращать сырые числа, так удобнее
+  if remain_list[5] < 10: seconds = f"0{remain_list[5]}"  '''
   
 
   return [years, months, days, hours, minutes, seconds]
