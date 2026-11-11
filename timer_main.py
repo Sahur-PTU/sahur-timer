@@ -2,16 +2,16 @@
 
 from time import sleep
 import datetime
-import os
+from os import system, mkdir
 from sys import platform
-import json
+import json 
 from colorama import init, Fore, Back, Style
 
 import time_calculator
 import time_bigASCII
 
 init()
-#os.system('mode con: cols=60 lines=17')
+#system('mode con: cols=60 lines=17')
 
 remain_time = ['00:00:00', '000']
 
@@ -21,13 +21,14 @@ data = { 'dateTime' : "0000-00-00 00:00:00",
 if platform == 'win32': clearOutput = "cls"
 else: clearOutput = "clear"
 
+
 def menu():
   try: 
-    os.system(clearOutput)
+    system(clearOutput)
     print(' [1] - Смотреть остаток \n [2] - Изменить дату \n [3] - Формат вывода \n [ ] - Выйти')
     de = input(" > ")
     return de        
-  except KeyboardInterrupt: exit()
+  except KeyboardInterrupt: return 0
 
 def output_mode():
   print(" [1] - Стандартный \n [2] - Бегущие строки \n [3] - Большой Аски")
@@ -61,19 +62,23 @@ def write_time ():
   while True:
     #os.system('cls')
     new_dateTime = input("Новая дата (ГГГГ-ММ-ДД ЧЧ-ММ-СС): ")
-    if '-' not in new_dateTime:
-        print('разделителей нету'); sleep(1)
-        continue
-    elif len(new_dateTime) != 19:
-        print('неправильное количество символов!'); sleep(1)
-        continue
-    elif new_dateTime[5:7] == "00" or new_dateTime[8:10] == "00":
-        print('ага, давай без нулевых месяцев или дней'); sleep(1)
-    else:
-        new_dateTime = new_dateTime.replace(".","-")
-        data['dateTime'] = new_dateTime
-        update_data = write()
-        break
+    if new_dateTime == ' ': break
+
+    if '-' in new_dateTime:
+      if len(new_dateTime) == 19:
+        if new_dateTime[5:7] != "00" and new_dateTime[8:10] != "00":
+          if int(new_dateTime[5:7]) < 13 and int(new_dateTime[8:10]) < 32: 
+            new_dateTime = new_dateTime.replace(".","-")
+            data['dateTime'] = new_dateTime
+            update_data = write()
+            break
+          else: print('ага, давай без несуществующих месяцев и дней'); sleep(1) 
+        else: print('ага, давай без несуществующих месяцев и дней'); sleep(1) 
+      else: print('неправильное количество символов!'); sleep(1)
+    else: print('разделителей нету'); sleep(1)
+
+    continue
+
 
 def check():
     update_data = read()
@@ -82,13 +87,12 @@ def check():
     test = '01.08.2026 09:09:09'
 
     sleep(1)
-    os.system(clearOutput)
+    system(clearOutput)
     cycle = 0
     while True:
       cycle += 1
       try:
-        print(data['dateTime'])
-        result = time_calculator.calculation(data['dateTime'], 1)
+        #print(data['dateTime'])
 
         # 2. Превращаем текст в объект datetime
         # %d - день, %m - месяц, %Y - год (4 цифры), %H - часы, %M - минуты, %S - секунды
@@ -98,7 +102,8 @@ def check():
         # 4. Проверяем, не в прошлом ли дата, и считаем разницу
         if target_time < now:
           if cycle < 2:
-            print("Эта дата уже прошла!")
+            print("Эта дата уже прошла!"); sleep(1.5)
+            system(clearOutput)
           time_left = now - target_time
         else:
           time_left = target_time - now
@@ -109,11 +114,19 @@ def check():
         hours = (total_seconds // 3600) % 24
         minutes = (total_seconds // 60) % 60
         seconds = total_seconds % 60
+
+        result = time_calculator.calculation(data['dateTime'], 1) # альтернативный вариант самоделка
+        #print(result) отладка
+        days = result[2]
+        hours = result[3]
+        minutes = result[4]
+        seconds = result[5]
+
         # добавление нулей к одиночным цифрам
         #if len(str(days)) < 2: days = '0'+str(days)
-        if len(str(hours)) < 2: hours = '0'+str(hours)
-        if len(str(minutes)) < 2: minutes = '0'+str(minutes)
-        if len(str(seconds)) < 2: seconds = '0'+str(seconds)
+        if hours < 10: hours = '0'+str(hours)
+        if minutes < 10: minutes = '0'+str(minutes)
+        if seconds < 10: seconds = '0'+str(seconds)
         # 6. Выводим красивый результат
         remain_time[0] = f"{hours}:{minutes}:{seconds}"
         remain_time[1] = days
@@ -122,15 +135,15 @@ def check():
         if int(remain_time[1]) < 10: color = Fore.YELLOW 
         if int(remain_time[1]) < 3: color = Fore.RED 
 
-        times, days = remain_time
+        clock, days = remain_time
         l = '─' * len(str(remain_time[1]))
         if len(l) < 2: 
           l = '──'
           days = '0'+str(remain_time[1])
 
-        def output_mode_1(color, days, times):
+        def output_mode_1(color, days, clock):
           line1 = f"╭─{l}─╮╭──────────╮"
-          line2 = f"│ {color}{days}{Style.RESET_ALL} ││ {color}{times}{Style.RESET_ALL} │"
+          line2 = f"│ {color}{days}{Style.RESET_ALL} ││ {color}{clock}{Style.RESET_ALL} │"
           line3 = f"╰─{l}─╯╰──────────╯"
           print(line1)
           print(line2)
@@ -138,8 +151,8 @@ def check():
           print("\r\033[2F", end="", flush=True)
 
 
-        def output_mode_2(color, days, times):
-          a1 = f"\r╭─{l}─╮╭──────────╮ \n│ {color}{days}{Style.RESET_ALL} ││ {color}{times}{Style.RESET_ALL} │\n╰─{l}─╯╰──────────╯"
+        def output_mode_2(color, days, clock):
+          a1 = f"\r╭─{l}─╮╭──────────╮ \n│ {color}{days}{Style.RESET_ALL} ││ {color}{clock}{Style.RESET_ALL} │\n╰─{l}─╯╰──────────╯"
         
           if remain_time[0] == '00:00:00' and remain_time[1] == 0:
             print(a1, end="", flush=True); sleep(3)
@@ -153,15 +166,15 @@ def check():
 
         def output_mode_3(color, days, times):
           print(color, end="")
-          time_bigASCII.main([str(days), str(hours), str(minutes), str(seconds)])
+          time_bigASCII.main(result)
           
 
         if data['mode'] == 1: 
-            output = output_mode_1(color, days, times)
+            output = output_mode_1(color, days, clock)
         if data['mode'] == 2: 
-            output = output_mode_2(color, days, times)
+            output = output_mode_2(color, days, clock)
         if data['mode'] == 3: 
-            output = output_mode_3(color, days, times)
+            output = output_mode_3(color, days, clock)
         sleep(1)
       except KeyboardInterrupt: 
         print(Fore.RESET)
