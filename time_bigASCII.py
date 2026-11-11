@@ -61,9 +61,9 @@ digits_2 = [
     [ " _  ",
       "/__/",
       "  / " ],
-    [ "  __",
-      " /__",
-      " __/" ],
+    [ " __ ",
+      "/__ ",
+      "__/ " ],
     [ "  __",
       " /_ ",
       "/__/" ],
@@ -73,7 +73,7 @@ digits_2 = [
     [ "  __ ",
       " /__/",
       "/__/ " ],
-    [ "  ___",
+    [ "  __ ",
       " /__/",
       " __/ " ],
       
@@ -140,24 +140,25 @@ def output(vew_time):
     print(LINE_3, end="", flush=True)
     print("\r\033[2F", end="", flush=True)
 
+def main(input_time): # фороматирование входящих цифор
+    for index in range(len(input_time)):
+       input_time[index] = str(input_time[index])
+       if len(input_time[index]) < 2: input_time[index] = f"0{input_time[index]}"
 
-def main(input_time): # для запуска из других программ
-    if len(input_time[0]) < 3: input_time[0] = f"0{input_time[0]}"
-    #if len(input_time[0]) < 3: input_time[0] = f"{input_time[2]}"
-    output(input_time)
+    if len(input_time[2]) < 3: input_time[2] = f"0{input_time[2]}"
 
+    output(input_time[2:])
 
 if __name__ == "__main__": # для локального теста
   while True: 
     result = time_calculator.calculation("2027-12-01 10:00:00", 1)
-    if len(result[2]) < 3: result[2] = f"0{result[2]}"
-    # print(result) # отладка
-    output(result[2:])
+    #print(result) # отладка
+    main(result)
     time.sleep(1)
 
 
 
-''' # древние наброски пещерных людей:
+''' # древние наброски пещерных людей
 ('001','02','23','30')
 if rem_time[0][0] == '0':
     s[0] = ("""
